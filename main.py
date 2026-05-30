@@ -1,4 +1,4 @@
-from Controlador.autenticacion import main
+from Vista.terminal import main
 
 
 if __name__ == "__main__":

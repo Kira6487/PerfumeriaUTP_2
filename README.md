@@ -13,7 +13,29 @@ Proyecto web para gestionar inventario, reservas, entregas y reposicion de merca
 - `public/`: archivos publicos del frontend.
 - `config/`: configuracion local.
 
-## Backend
+## Ejecucion rapida
+
+Con PostgreSQL activo, ejecuta un solo comando:
+
+```powershell
+.\.venv\Scripts\python.exe main.py
+```
+
+Tambien puedes usar:
+
+```powershell
+.\iniciar.bat
+```
+
+Ese comando prepara el frontend si hace falta, levanta la API y abre el sistema en:
+
+```text
+http://127.0.0.1:5000
+```
+
+Si aparece un mensaje indicando que no existe `npm`, instala Node.js LTS desde `https://nodejs.org`, reinicia VS Code y vuelve a ejecutar el mismo comando.
+
+## Backend manual
 
 Instalar dependencias:
 
@@ -29,7 +51,7 @@ Levantar API:
 
 La API corre en `http://127.0.0.1:5000/api`.
 
-## Frontend
+## Frontend manual
 
 Instalar dependencias:
 

@@ -3,10 +3,11 @@ from __future__ import annotations
 from datetime import date, datetime
 from decimal import Decimal
 from functools import wraps
+from pathlib import Path
 from typing import Any, Callable
 
 import psycopg
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 from BD.conexion_bd import bd
@@ -24,8 +25,11 @@ from Controlador.procesos import (
     instalar_funciones_procesos,
 )
 
+BASE_DIR = Path(__file__).resolve().parent
+FRONTEND_DIST = BASE_DIR / "dist"
 
-app = Flask(__name__)
+
+app = Flask(__name__, static_folder=None)
 CORS(app)
 
 
@@ -363,6 +367,23 @@ def cancelar_reposicion_api(user_id: int, reposicion_id: int):
     return jsonify({"id": reposicion_id, "reposicion_id": reposicion_id, "status": "D"})
 
 
+@app.get("/")
+def servir_frontend_inicio():
+    return _servir_frontend("index.html")
+
+
+@app.get("/<path:path>")
+def servir_frontend(path: str):
+    if path.startswith("api/"):
+        return _error("Endpoint no encontrado.", 404)
+
+    destino = FRONTEND_DIST / path
+    if destino.is_file():
+        return send_from_directory(FRONTEND_DIST, path)
+
+    return _servir_frontend("index.html")
+
+
 def _usuario_desde_token() -> int | None:
     auth = request.headers.get("Authorization", "")
     if not auth.startswith("Bearer "):
@@ -400,6 +421,16 @@ def _normalizar(valor: Any) -> Any:
 
 def _error(mensaje: str, status: int):
     return jsonify({"error": mensaje}), status
+
+
+def _servir_frontend(path: str):
+    if not (FRONTEND_DIST / "index.html").exists():
+        return _error(
+            "Frontend no compilado. Ejecuta main.py para preparar la interfaz web.",
+            503,
+        )
+
+    return send_from_directory(FRONTEND_DIST, path)
 
 
 if __name__ == "__main__":

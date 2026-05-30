@@ -29,3 +29,16 @@ bd.ejecutar("INSERT INTO auditoria(descripcion) VALUES (%s)", ["Prueba"])
 resultado = bd.llamar_funcion("mi_funcion", [1, "texto"])
 bd.llamar_procedimiento("mi_procedimiento", [10])
 ```
+
+## Autenticacion
+
+Endpoints previstos para conectar el front con el back:
+
+- `POST /api/auth/registro`: crea un usuario nuevo llamando a `public.fn_crear_usuario`.
+- `POST /api/auth/login`: valida credenciales y devuelve datos de sesion.
+
+Prueba por terminal:
+
+```powershell
+.\.venv\Scripts\python.exe main.py
+```

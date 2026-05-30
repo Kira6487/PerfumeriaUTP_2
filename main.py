@@ -4,6 +4,7 @@ import shutil
 import subprocess
 import sys
 import webbrowser
+import os
 from pathlib import Path
 
 from api import FRONTEND_DIST, FRONTEND_FALLBACK, crear_app
@@ -13,6 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent
 PACKAGE_JSON = BASE_DIR / "package.json"
 PACKAGE_LOCK = BASE_DIR / "package-lock.json"
 NODE_MODULES = BASE_DIR / "node_modules"
+VITE_JS = NODE_MODULES / "vite" / "bin" / "vite.js"
 FRONTEND_INDEX = FRONTEND_DIST / "index.html"
 FALLBACK_INDEX = FRONTEND_FALLBACK / "index.html"
 URL = "http://127.0.0.1:5000"
@@ -25,7 +27,8 @@ def main() -> None:
     app = crear_app()
     print(f"Sistema listo: {URL}")
     print("Presiona CTRL+C para detener el programa.")
-    webbrowser.open(URL)
+    if os.environ.get("PERFUMERIA_NO_BROWSER") != "1":
+        webbrowser.open(URL)
     app.run(host="127.0.0.1", port=5000, debug=False)
 
 
@@ -53,7 +56,11 @@ def preparar_frontend() -> None:
         ejecutar([npm, "install"], "Instalando dependencias del frontend...")
 
     if frontend_necesita_build():
-        ejecutar([npm, "run", "build"], "Compilando frontend...")
+        node = buscar_node()
+        if node and VITE_JS.exists():
+            ejecutar([node, str(VITE_JS), "build"], "Compilando frontend...")
+        else:
+            ejecutar([npm, "run", "build"], "Compilando frontend...")
 
 
 def frontend_necesita_build() -> bool:
@@ -69,6 +76,10 @@ def frontend_necesita_build() -> bool:
 
 
 def buscar_npm() -> str | None:
+    npm_local = BASE_DIR / ".tools" / "node" / "npm.cmd"
+    if npm_local.exists():
+        return str(npm_local)
+
     for comando in ("npm.cmd", "npm"):
         ruta = shutil.which(comando)
         if ruta:
@@ -82,6 +93,27 @@ def buscar_npm() -> str | None:
     for ruta in rutas_comunes:
         if ruta.exists():
             return str(ruta)
+
+    return None
+
+
+def buscar_node() -> str | None:
+    node_local = BASE_DIR / ".tools" / "node" / "node.exe"
+    if node_local.exists():
+        return str(node_local)
+
+    ruta = shutil.which("node")
+    if ruta:
+        return ruta
+
+    rutas_comunes = [
+        Path("C:/Program Files/nodejs/node.exe"),
+        Path("C:/Program Files (x86)/nodejs/node.exe"),
+    ]
+
+    for ruta_comun in rutas_comunes:
+        if ruta_comun.exists():
+            return str(ruta_comun)
 
     return None
 

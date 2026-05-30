@@ -151,15 +151,22 @@ def kpis(_user_id: int):
 
 @app.get("/api/reservas")
 @requiere_sesion
-def listar_reservas(_user_id: int):
+def listar_reservas(user_id: int):
     status = request.args.get("status")
+    solo_mias = str(request.args.get("mine", "")).lower() in {"1", "true", "yes", "si"}
     limit = request.args.get("limit", type=int)
     parametros: list[Any] = []
-    filtro = ""
+    filtros: list[str] = []
 
     if status:
-        filtro = "WHERE rc.status = %s"
+        filtros.append("rc.status = %s")
         parametros.append(status)
+
+    if solo_mias:
+        filtros.append("rc.user_id = %s")
+        parametros.append(user_id)
+
+    filtro = f"WHERE {' AND '.join(filtros)}" if filtros else ""
 
     consulta = f"""
         SELECT

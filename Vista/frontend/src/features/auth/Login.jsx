@@ -26,39 +26,39 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 w-full max-w-md">
+    <div className="client-shell min-h-screen flex items-center justify-center p-4">
+      <div className="bg-white/88 rounded-[2rem] shadow-2xl shadow-rose-950/10 border border-pink-100 p-10 w-full max-w-md backdrop-blur">
 
         <div className="mb-8 text-center">
-          <div className="w-12 h-12 bg-emerald-700 rounded-xl mx-auto mb-4 flex items-center justify-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-rose-500 via-pink-500 to-amber-400 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-rose-200">
             <span className="text-white font-bold text-lg">M</span>
           </div>
-          <h1 className="text-xl font-semibold text-gray-900">Marly Perfumeria</h1>
-          <p className="text-sm text-gray-500 mt-1">Panel de administracion</p>
+          <h1 className="text-xl font-semibold text-rose-950">Marly Perfumeria</h1>
+          <p className="text-sm text-rose-400 mt-1">Panel de administracion</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+            <label className="block text-sm font-medium text-rose-700 mb-1">Usuario</label>
             <input
               type="text"
               required
               value={form.usuario}
               onChange={(e) => setForm({ ...form, usuario: e.target.value })}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="client-input w-full"
               placeholder="Nombre de usuario"
               autoComplete="username"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Contrasena</label>
+            <label className="block text-sm font-medium text-rose-700 mb-1">Contrasena</label>
             <input
               type="password"
               required
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="client-input w-full"
               placeholder="********"
               autoComplete="current-password"
             />
@@ -73,7 +73,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-60"
+            className="client-primary-button w-full disabled:opacity-60"
           >
             {loading ? 'Ingresando...' : 'Ingresar'}
           </button>

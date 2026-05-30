@@ -20,8 +20,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const isAdmin = Boolean(user?.admin || user?.role_id === 2);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAdmin: user?.role_id === 2 }}>
+    <AuthContext.Provider value={{ user, login, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

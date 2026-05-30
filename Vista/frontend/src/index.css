@@ -1,1 +1,170 @@
 @import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: #fff8fb;
+}
+
+.client-shell {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(244, 114, 182, 0.16), transparent 28rem),
+    radial-gradient(circle at 86% 8%, rgba(245, 183, 76, 0.18), transparent 24rem),
+    linear-gradient(135deg, #fff8fb 0%, #fff7ed 48%, #fff1f2 100%);
+}
+
+.client-page {
+  position: relative;
+  min-height: calc(100vh - 4rem);
+}
+
+.client-hero {
+  min-height: 18rem;
+  overflow: hidden;
+  border-radius: 2rem;
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 24px 80px rgba(136, 19, 55, 0.18);
+  padding: clamp(2rem, 5vw, 4rem);
+}
+
+.catalog-card {
+  overflow: hidden;
+  border: 1px solid rgba(251, 207, 232, 0.86);
+  border-radius: 1.75rem;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 16px 44px rgba(190, 83, 119, 0.11);
+  padding: 0.9rem;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: catalog-card-in 0.62s ease forwards;
+  backdrop-filter: blur(16px);
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.catalog-card:hover {
+  border-color: rgba(244, 114, 182, 0.76);
+  box-shadow: 0 28px 70px rgba(190, 83, 119, 0.18);
+  transform: translateY(-6px);
+}
+
+.client-input {
+  border: 1px solid rgba(251, 207, 232, 0.95);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.86);
+  color: #4a102a;
+  font-size: 0.875rem;
+  outline: none;
+  padding: 0.75rem 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.client-input:focus {
+  border-color: #f472b6;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(244, 114, 182, 0.16);
+}
+
+.client-primary-button,
+.client-secondary-button {
+  border-radius: 1rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  padding: 0.82rem 1rem;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.client-primary-button {
+  background: linear-gradient(135deg, #db2777, #f59e0b);
+  box-shadow: 0 14px 28px rgba(219, 39, 119, 0.24);
+  color: white;
+}
+
+.client-secondary-button {
+  border: 1px solid rgba(245, 158, 11, 0.36);
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.client-primary-button:hover,
+.client-secondary-button:hover {
+  filter: saturate(1.08);
+  transform: translateY(-1px);
+}
+
+.client-primary-button:active,
+.client-secondary-button:active {
+  transform: translateY(0);
+}
+
+.client-mini-stat {
+  min-width: 6.6rem;
+  border: 1px solid rgba(251, 207, 232, 0.9);
+  border-radius: 1.25rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 241, 242, 0.8));
+  padding: 0.85rem;
+  text-align: center;
+}
+
+.client-mini-stat span {
+  display: block;
+  color: #9f1239;
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.client-mini-stat p {
+  margin-top: 0.35rem;
+  color: #be185d;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.reservation-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.2rem;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: catalog-card-in 0.48s ease forwards;
+  transition: background 0.2s ease;
+}
+
+.reservation-row:hover {
+  background: rgba(255, 241, 242, 0.6);
+}
+
+.modal-pop {
+  animation: modal-pop 0.22s ease both;
+}
+
+@media (min-width: 640px) {
+  .reservation-row {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+@keyframes catalog-card-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

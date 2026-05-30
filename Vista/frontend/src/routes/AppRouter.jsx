@@ -7,10 +7,22 @@ import Inventario from '../features/inventario/Inventario';
 import Reservas from '../features/reservas/Reservas';
 import Entregas from '../features/entregas/Entregas';
 import Alertas from '../features/alertas/Alertas';
+import CatalogoCliente from '../features/cliente/CatalogoCliente';
+import MisReservasCliente from '../features/cliente/MisReservasCliente';
 
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
   return user ? children : <Navigate to="/login" />;
+};
+
+const AdminRoute = ({ children }) => {
+  const { isAdmin } = useAuth();
+  return isAdmin ? children : <Navigate to="/" replace />;
+};
+
+const HomeRoute = () => {
+  const { isAdmin } = useAuth();
+  return isAdmin ? <Dashboard /> : <CatalogoCliente />;
 };
 
 const AppRouter = () => {
@@ -23,11 +35,12 @@ const AppRouter = () => {
             <Layout />
           </PrivateRoute>
         }>
-          <Route index element={<Dashboard />} />
-          <Route path="inventario" element={<Inventario />} />
-          <Route path="reservas" element={<Reservas />} />
-          <Route path="entregas" element={<Entregas />} />
-          <Route path="alertas" element={<Alertas />} />
+          <Route index element={<HomeRoute />} />
+          <Route path="mis-reservas" element={<MisReservasCliente />} />
+          <Route path="inventario" element={<AdminRoute><Inventario /></AdminRoute>} />
+          <Route path="reservas" element={<AdminRoute><Reservas /></AdminRoute>} />
+          <Route path="entregas" element={<AdminRoute><Entregas /></AdminRoute>} />
+          <Route path="alertas" element={<AdminRoute><Alertas /></AdminRoute>} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

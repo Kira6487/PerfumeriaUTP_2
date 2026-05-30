@@ -84,11 +84,11 @@ def iniciar_sesion(user_name: str, user_password: str) -> SesionUsuario | None:
             CONCAT_WS(' ', u.u_pnombre, u.u_snombre, u.u_papellido, u.u_sapellido) AS nombre_completo
         FROM usuarios u
         JOIN roles r ON r.role_id = u.role_id
-        WHERE u.user_name = %s
+        WHERE (u.user_name = %s OR u.u_correo = %s)
           AND u.user_password = %s
         LIMIT 1
     """
-    filas = bd.consultar(consulta, [user_name, user_password])
+    filas = bd.consultar(consulta, [user_name, user_name, user_password])
 
     if not filas:
         return None

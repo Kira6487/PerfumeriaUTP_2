@@ -1,56 +1,78 @@
 # PerfumeriaUTP_2
 
-Proyecto Final para el curso de Lenguajes de Programacion.
+Proyecto web para gestionar inventario, reservas, entregas y reposicion de mercaderia de una perfumeria.
 
 ## Estructura
 
-- `Modelo/`: clases y entidades del dominio.
-- `Vista/`: interfaces de usuario.
-- `Controlador/`: logica que conecta vista, modelo y base de datos.
-- `BD/`: conexion y utilidades de PostgreSQL.
-- `config/`: variables de configuracion local.
-- `.venv/`: entorno virtual de Python.
+- `BD/`: conexion PostgreSQL y funciones SQL.
+- `Modelo/`: objetos Python basados en tablas de la base de datos.
+- `Controlador/`: reglas de negocio y llamadas a funciones/SP.
+- `Vista/`: interfaz temporal por terminal.
+- `api.py`: API Flask para conectar el front React con el backend Python.
+- `src/`: frontend React + Vite.
+- `public/`: archivos publicos del frontend.
+- `config/`: configuracion local.
 
-## Conexion PostgreSQL
+## Backend
 
-Instalar dependencias dentro del entorno virtual:
+Instalar dependencias:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Ejemplo de uso:
+Levantar API:
 
-```python
-from BD.conexion_bd import bd
-
-filas = bd.consultar("SELECT * FROM productos")
-bd.ejecutar("INSERT INTO auditoria(descripcion) VALUES (%s)", ["Prueba"])
-resultado = bd.llamar_funcion("mi_funcion", [1, "texto"])
-bd.llamar_procedimiento("mi_procedimiento", [10])
+```powershell
+.\.venv\Scripts\python.exe api.py
 ```
 
-## Autenticacion
+La API corre en `http://127.0.0.1:5000/api`.
 
-Endpoints previstos para conectar el front con el back:
+## Frontend
 
-- `POST /api/auth/registro`: crea un usuario nuevo llamando a `public.fn_crear_usuario`.
-- `POST /api/auth/login`: valida credenciales y devuelve datos de sesion.
+Instalar dependencias:
 
-## Procesos de inventario y reservas
+```powershell
+npm install
+```
 
-Endpoints previstos:
+Levantar Vite:
 
-- `POST /api/reservas`: usuario crea una reserva en estado `O`.
-- `PATCH /api/reservas/{reserv_id}/aprobar`: admin aprueba la reserva, pasa a `A` y afecta `stock.comprometido`.
-- `POST /api/reservas/{reserv_id}/entrega`: admin genera entrega desde reserva aprobada; la reserva queda `C`, libera comprometido y resta stock fisico.
-- `PATCH /api/reservas/{reserv_id}/cancelar`: admin cancela reserva `O` o `A`; si estaba aprobada libera comprometido.
-- `POST /api/reposiciones`: usuario crea orden de reposicion en estado `O`.
-- `PATCH /api/reposiciones/{reposicion_id}/aprobar`: admin aprueba la orden, pasa a `A` y afecta `stock.pedido`.
-- `POST /api/reposiciones/{reposicion_id}/entrada`: admin genera entrada desde orden aprobada; la orden queda `C`, libera pedido y aumenta stock fisico.
-- `PATCH /api/reposiciones/{reposicion_id}/cancelar`: admin cancela orden `O` o `A`; si estaba aprobada libera pedido.
+```powershell
+npm run dev
+```
 
-Prueba por terminal:
+## Endpoints
+
+- `POST /api/auth/login`
+- `POST /api/auth/registro`
+- `GET /api/inventario`
+- `GET /api/inventario/kpis`
+- `GET /api/reservas?status=O`
+- `POST /api/reservas`
+- `PUT|PATCH /api/reservas/{reserv_id}/aprobar`
+- `PUT|PATCH /api/reservas/{reserv_id}/cancelar`
+- `POST /api/entregas/{reserv_id}/despachar`
+- `GET /api/reposiciones?status=O`
+- `POST /api/reposiciones`
+- `PUT|PATCH /api/reposiciones/{reposicion_id}/aprobar`
+- `POST /api/reposiciones/{reposicion_id}/entrada`
+- `PUT|PATCH /api/reposiciones/{reposicion_id}/cancelar`
+
+## Procesos
+
+- Usuario crea reserva en estado `O`.
+- Admin aprueba reserva: pasa a `A` y afecta `stock.comprometido`.
+- Admin registra entrega: genera entrega desde reserva, cierra la reserva, libera comprometido y resta stock fisico.
+- Si no hay stock, la reserva falla y el usuario puede crear una orden de reposicion.
+- Admin aprueba orden de reposicion: pasa a `A` y afecta `stock.pedido`.
+- Admin genera entrada desde reposicion: cierra la orden, libera pedido y aumenta stock fisico.
+- Admin puede cancelar reservas u ordenes abiertas/aprobadas, liberando inventario cuando corresponde.
+
+## Terminal
+
+La interfaz temporal por consola sigue disponible:
 
 ```powershell
 .\.venv\Scripts\python.exe main.py
